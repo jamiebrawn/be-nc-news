@@ -3,16 +3,14 @@ const app = express() ;
 const {
   getTopics
 } = require( "./controllers/topics.controllers" ) ; 
+const { getEndpoints } = require('./controllers/endpoints.controllers');
 
-app.get( "/api/topics" , getTopics) ;
+app.get( "/api/topics" , getTopics ) ;
 
-
-
-
+app.get( "/api" , getEndpoints ) ;
 
 
 // ERROR HANDLING
-
 
 // missing endpoint 404
 app.use( ( req , res , next ) => {
