@@ -251,6 +251,24 @@ describe ( "app" , () => {
         }) ;
     }) ;
 
+    test( "status 400: responds with message for invalid property values" , () => {
+
+      const newComment = {
+        username: "",
+        body: "newComment"
+      };
+
+      return request( app )
+        .post( "/api/articles/not-an-article/comments" )
+        .send( newComment )
+        .expect( 400 )
+        .then( ( { body } ) => {
+          expect( body.msg )
+          .toBe( "Bad request" ) ;
+        }) ;
+    }) ;
+
+
   }) ;
 
   describe( "GET /api/articles" , () => {
