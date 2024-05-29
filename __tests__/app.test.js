@@ -200,7 +200,7 @@ describe ( "app" , () => {
         }) ;
     }) ;
     
-    test( "status 404: returned with error message for valid but non-existent article_id" , () => {
+    test( "status 404: returned with error message for valid but non-existent username" , () => {
       
       const newComment = {
         username: "invalid_user",
