@@ -1,3 +1,4 @@
+require( "jest-sorted" ) ;
 const app = require( "../app" ) ;
 const request = require( "supertest" ) ;
 const db = require( "../db/connection" ) ;
@@ -21,7 +22,7 @@ describe ( "app" , () => {
 			.expect( 200 )
 			.then( ( { body } )=> {
 
-				expect(body.topics).toHaveLength( 3 ) ;
+				expect( body.topics ).toHaveLength( 3 ) ;
 
 				body.topics.forEach( ( topic ) => {
 					expect( topic ).toMatchObject( {
@@ -91,6 +92,45 @@ describe ( "app" , () => {
           .toBe( "Bad request" ) ;
         }) ;
     }) ;
+  }) ;
+
+  describe( "GET /api/articles" , () => {
+
+    test( "status 200: should return all article objects in an array of correct length and with correct properties" , () => {
+      
+      return request( app )
+			.get( "/api/articles" )
+			.expect( 200 )
+			.then( ( { body } )=> {
+
+				expect( body.articles ).toHaveLength( 13 ) ;
+
+				body.articles.forEach( ( article ) => {
+					expect( article ).toMatchObject( {
+            article_id : expect.any( Number ) ,
+            title : expect.any( String ) ,
+            topic : expect.any( String ) ,
+            author : expect.any( String ) ,
+            created_at : expect.any( String ) ,
+            votes : expect.any( Number ) ,
+            article_img_url : expect.any( String ) ,
+            comment_count : expect.any( Number ) 
+					}) ;
+				}) ;
+			}) ;
+    }) ;
+
+    test( "status 200: should sort response descending by created_at" , () => {
+      
+      return request( app )
+			.get( "/api/articles" )
+			.expect( 200 )
+			.then( ( { body } )=> {
+
+        expect( body.articles ).toBeSorted( "created_at" , { descending : true } ) ;
+			}) ;
+    }) ;
+
   }) ;
 
   describe ( "missing endpoints" , () => {
