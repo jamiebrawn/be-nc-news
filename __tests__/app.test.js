@@ -155,6 +155,104 @@ describe ( "app" , () => {
     }) ;
   }) ;
 
+  describe( "POST /api/articles/:article_id/comments" , () => {
+    test( "status 201: adds new comment for an existing article_id and sends the details back" , () => {
+
+      const newComment = {
+        username: "butter_bridge",
+        body: "new comment"
+      };
+
+      return request( app )
+        .post( "/api/articles/1/comments" )
+        .send( newComment )
+        .expect( 201 )
+        .then( ( { body } ) => {
+          expect( body.comment.comment_id )
+          .toEqual( expect.any( Number ) ) ;
+          expect( body.comment.article_id )
+          .toBe( 1 ) ;
+          expect( body.comment.author )
+          .toBe( "butter_bridge" ) ;
+          expect( body.comment.body )
+          .toBe( "new comment" ) ;
+          expect( body.comment.votes )
+          .toBe( 0 ) ;
+          expect( body.comment.created_at )
+          .toEqual( expect.any( String ) ) ;
+        }) ;
+    }) ;
+
+    test( "status 404: returned with error message for valid but non-existent article_id" , () => {
+      
+      const newComment = {
+        username: "butter_bridge",
+        body: "new comment"
+      };
+      
+      return request( app )
+        .post( "/api/articles/999/comments" )
+        .send( newComment )
+        .expect( 404 )
+        .then( ( { body } ) => {
+          expect( body.msg )
+          .toBe( "article does not exist" ) ;
+        }) ;
+    }) ;
+    
+    test( "status 404: returned with error message for valid but non-existent article_id" , () => {
+      
+      const newComment = {
+        username: "invalid_user",
+        body: "new comment"
+      };
+      
+      return request( app )
+        .post( "/api/articles/1/comments" )
+        .send( newComment )
+        .expect( 404 )
+        .then( ( { body } ) => {
+          expect( body.msg )
+          .toBe( "user does not exist" ) ;
+        }) ;
+    }) ;
+
+    test( "status 400: responds with message for invalid article_id" , () => {
+
+      const newComment = {
+        username: "invalid_user",
+        body: "new comment"
+      };
+
+      return request( app )
+        .post( "/api/articles/not-an-article/comments" )
+        .send( newComment )
+        .expect( 400 )
+        .then( ( { body } ) => {
+          expect( body.msg )
+          .toBe( "Bad request" ) ;
+        }) ;
+    }) ;
+
+    test( "status 400: responds with message for invalid property values" , () => {
+
+      const newComment = {
+        username: "butter_bridge",
+        body: ""
+      };
+
+      return request( app )
+        .post( "/api/articles/not-an-article/comments" )
+        .send( newComment )
+        .expect( 400 )
+        .then( ( { body } ) => {
+          expect( body.msg )
+          .toBe( "Bad request" ) ;
+        }) ;
+    }) ;
+
+  }) ;
+
   describe( "GET /api/articles" , () => {
 
     test( "status 200: should return all article objects in an array of correct length and with correct properties" , () => {
