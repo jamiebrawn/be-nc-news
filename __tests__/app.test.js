@@ -94,6 +94,67 @@ describe ( "app" , () => {
     }) ;
   }) ;
 
+  describe( "GET /api/articles/:article_id/comments" , () => {
+    test( "status 200: returns an array of all related comment objects with correct length and properties" , () => {
+      return request( app )
+      .get( "/api/articles/1/comments" )
+      .expect( 200 )
+      .then( ( { body } )=> {
+        
+        expect( body.comments ).toHaveLength( 11 ) ;
+
+        body.comments.forEach( ( article ) => {
+          expect( article ).toMatchObject( {
+            comment_id : expect.any( Number ) ,
+            body: expect.any ( String ) ,
+            votes : expect.any( Number ) ,
+            author : expect.any( String ) ,
+            article_id : expect.any( Number ) ,
+            created_at : expect.any( String ) ,
+          }) ;
+        }) ;
+      }) ;
+    }) ;
+
+    test( "status 200: returns an empty array if no comments exist" , () => {
+      return request( app )
+      .get( "/api/articles/4/comments" )
+      .expect( 200 )
+      .then( ( { body } )=> {
+        expect( body.comments ).toHaveLength( 0 ) ;
+      }) ;
+    }) ;
+
+    test( "status 200: should sort response descending by created_at" , () => {
+      
+      return request( app )
+			.get( "/api/articles/1/comments" )
+			.expect( 200 )
+			.then( ( { body } )=> {
+        expect( body.comments ).toBeSorted( "created_at" , { descending : true } ) ;
+			}) ;
+    }) ;
+
+    test( "status 404: returned with error message for valid but non-existent id" , () => {
+      return request( app )
+        .get( "/api/articles/999/comments" )
+        .expect( 404 )
+        .then( ( { body } ) => {
+          expect( body.msg )
+          .toBe( "article does not exist" ) ;
+        }) ;
+    }) ;
+    test( "status 400: responds with message for invalid id" , () => {
+      return request( app )
+        .get( "/api/articles/not-an-article/comments" )
+        .expect( 400 )
+        .then( ( { body } ) => {
+          expect( body.msg )
+          .toBe( "Bad request" ) ;
+        }) ;
+    }) ;
+  }) ;
+
   describe( "GET /api/articles" , () => {
 
     test( "status 200: should return all article objects in an array of correct length and with correct properties" , () => {
