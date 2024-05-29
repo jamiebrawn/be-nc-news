@@ -33,6 +33,22 @@ describe ( "app" , () => {
     }) ;
   }) ;
 
+  describe ( "GET /api" , () => {
+
+    test( "200: should return a JSON of all available endpoints" , () => {
+      
+      return request( app )
+      .get( "/api" )
+      .expect( 200 )
+      .then( ( { body } ) => {
+        return fs.promises.readFile( `${__dirname}/../endpoints.json` , "utf8" )
+        .then( ( endpoints ) => {
+          expect( body ).toEqual( JSON.parse( endpoints ) ) ;
+        }) ;
+      }) ;
+    } ) ;
+  }) ; 
+
   describe( "GET /api/articles/:article_id" , () => {
     test( "status 200: returns a single article object" , () => {
       return request( app )
@@ -76,23 +92,6 @@ describe ( "app" , () => {
         }) ;
     }) ;
   }) ;
-
-
-  describe ( "GET /api" , () => {
-
-    test( "200: should return a JSON of all available endpoints" , () => {
-      
-      return request( app )
-      .get( "/api" )
-      .expect( 200 )
-      .then( ( { body } ) => {
-        return fs.promises.readFile( `${__dirname}/../endpoints.json` , "utf8" )
-        .then( ( endpoints ) => {
-          expect( body ).toEqual( JSON.parse( endpoints ) ) ;
-        }) ;
-      }) ;
-    } ) ;
-  }) ; 
 
   describe ( "missing endpoints" , () => {
 
