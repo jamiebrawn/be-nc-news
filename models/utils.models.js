@@ -1,4 +1,4 @@
-
+const format = require( "pg-format" ) ;
 const db = require( "../db/connection") ;
 
 exports.checkExists = async ( table , column , value ) => {
