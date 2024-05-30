@@ -150,7 +150,7 @@ describe ( "app" , () => {
           .toBe( "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700" ) ;
         }) ;
     }) ;
-    test( "status 200: should ignore invalid input properties" , () => {
+    test( "status 200: should ignore invalid, excess input properties" , () => {
       return request( app )
         .patch( "/api/articles/3" )
         .send ( {
@@ -270,14 +270,6 @@ describe ( "app" , () => {
         }) ;
     }) ;
   }) ;
-
-
-
-
-
-
-
-
 
   describe( "POST /api/articles/:article_id/comments" , () => {
     test( "status 201: adds new comment for an existing article_id and sends the details back" , () => {
