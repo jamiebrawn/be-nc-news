@@ -13,6 +13,7 @@ const {
   postCommentByArticleId ,
   deleteCommentByCommentId
 } = require( "./controllers/comments.controllers" ) ;
+const { getAllUsers } = require( "./controllers/users.controllers" ) ;
 const { 
   getEndpoints 
 } = require('./controllers/endpoints.controllers') ;
@@ -34,6 +35,8 @@ app.post( "/api/articles/:article_id/comments" , postCommentByArticleId ) ;
 app.delete( "/api/comments/:comment_id" , deleteCommentByCommentId ) ;
 
 app.get( "/api/articles" , getArticles ) ;
+
+app.get( "/api/users" , getAllUsers ) ;
 
 // ERROR HANDLING
 

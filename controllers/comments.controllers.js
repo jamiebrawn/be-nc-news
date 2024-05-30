@@ -4,7 +4,7 @@ const {
   deleteCommentFromDbByCommentId
 } = require( "../models/comments.models" ) ;
 const { selectArticleById } = require( "../models/articles.models" ) ;
-const { checkExists } = require("../models/utils.models");
+const { checkExists } = require( "../models/utils.models" );
 
 
 exports.getCommentsByArticleId = ( req , res , next ) => {
