@@ -1,4 +1,5 @@
 const db = require( "../db/connection" ) ;
+const { checkExists } = require( "../models/utils.models" ) ;
 
 exports.selectCommentsByArticleId = ( article_id ) => {
   return db
@@ -26,3 +27,26 @@ exports.insertCommentByArticleId = ( article_id , username , body ) => {
     return result.rows[ 0 ] ;
   }) ;
 } ;
+
+// exports.insertCommentByArticleId = (article_id, username, body) => {
+//   return Promise.all([
+//     checkExists("articles", "article_id", article_id),
+//     checkExists("users", "username", username)
+//   ])
+//   .then(() => {
+//     return db.query(
+//       `INSERT INTO comments (article_id, author, body)
+//       VALUES ($1, $2, $3)
+//       RETURNING *;`,
+//       [article_id, username, body]
+//     );
+//   })
+//   .then((result) => {
+//     return result.rows[0];
+//   });
+// };
+
+
+
+
+

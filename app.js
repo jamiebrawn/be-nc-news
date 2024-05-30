@@ -5,7 +5,8 @@ const {
 } = require( "./controllers/topics.controllers" ) ; 
 const { 
   getArticleById ,
-  getArticles
+  getArticles,
+  patchArticleByArticleId
 } = require( "./controllers/articles.controllers" ) ;
 const {
   getCommentsByArticleId ,
@@ -23,6 +24,8 @@ app.get( "/api" , getEndpoints ) ;
 
 app.get( "/api/articles/:article_id" , getArticleById ) ;
 
+app.patch( "/api/articles/:article_id" , patchArticleByArticleId ) ;
+
 app.get( "/api/articles/:article_id/comments" , getCommentsByArticleId ) ;
 
 app.post( "/api/articles/:article_id/comments" , postCommentByArticleId ) ;
@@ -33,6 +36,7 @@ app.get( "/api/articles" , getArticles ) ;
 
 // missing endpoint 404
 app.use( ( req , res , next ) => {
+  console.log("Endpoint not found");
   res
   .status( 404 )
   .send( { msg : "Endpoint not found" } ) ;
@@ -41,10 +45,21 @@ app.use( ( req , res , next ) => {
 
 // psql defined errors
 app.use( ( err , req , res , next ) => {
-  if ( err.code === '23502' || err.code === '22P02') {
+  if ( 
+    err.code === "23502" // not_null_violation
+    || err.code === "22P02" // invalid_text_representation
+    || err.code === "23505" // unique_violation
+    || err.code === "23514" // check_violation
+    ) {
     res
     .status( 400 )
-    .send( { msg: 'Bad request' } ) ;
+    .send( { msg: "Bad request" } ) ;
+  } else if ( 
+    err.code === "23503" // foreign_key_violation
+  ) {
+    res
+    .status( 404 )
+    .send( { msg: "Not found" } ) ;
   } else {
     next( err ) ;
   }
@@ -66,7 +81,7 @@ app.use( ( err , req , res , next ) => {
   console.log( err ) ;
   res
   .status( 500 )
-  .send( { msg : "Internal Server Error"} ) ;
+  .send( { msg : "Internal Server Error" } ) ;
 } ) ;
 
 module.exports = app ;
