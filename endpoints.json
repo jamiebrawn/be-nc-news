@@ -95,5 +95,12 @@
         "article_img_url": "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?w=700&h=700"
       }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the given comment by comment_id",
+    "queries": [],
+    "exampleResponse": {
+      "status": 204
+    }
   }
 }

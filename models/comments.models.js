@@ -28,6 +28,11 @@ exports.insertCommentByArticleId = ( article_id , username , body ) => {
   }) ;
 } ;
 
+exports.deleteCommentFromDbByCommentId = ( comment_id ) => {
+  return db
+  .query( "DELETE FROM comments WHERE comment_id = $1", [ comment_id ] ) ; 
+}  
+
 // exports.insertCommentByArticleId = (article_id, username, body) => {
 //   return Promise.all([
 //     checkExists("articles", "article_id", article_id),
