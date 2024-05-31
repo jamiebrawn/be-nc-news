@@ -405,11 +405,55 @@ describe ( "app" , () => {
 			.get( "/api/articles" )
 			.expect( 200 )
 			.then( ( { body } )=> {
-
-        expect( body.articles ).toBeSorted( "created_at" , { descending : true } ) ;
+        expect( body.articles )
+        .toBeSorted( "created_at" , { descending : true } ) ;
 			}) ;
     }) ;
 
+    test( "status 200: returns an array of articles filtered by topic" , () => {
+      return request( app )
+      .get( "/api/articles?topic=cats" )
+      .expect( 200 )
+      .then( ( { body } ) => {
+        expect( body.articles ).toHaveLength( 1 ) ;
+        body.articles.forEach(( article ) => {
+          expect( article.topic )
+          .toBe( "cats" ) ;
+        }) ;
+      }) ;
+    }) ;
+
+    test( "status 200: should handle multiple objects in an array" , () => {
+      return request( app )
+      .get( "/api/articles?topic=mitch" )
+      .expect( 200 )
+      .then( ( { body } ) => {
+        expect( body.articles ).toHaveLength( 12 ) ;
+        body.articles.forEach(( article ) => {
+          expect( article.topic )
+          .toBe( "mitch" ) ;
+        }) ;
+      }) ;
+    }) ;
+  
+    test( "status 200: returns an empty array when topic has no articles" , () => {
+      return request( app )
+      .get( "/api/articles?topic=paper" )
+      .expect( 200 )
+      .then( ( { body } ) => {
+        expect( body.articles ).toHaveLength( 0 ) ;
+      }) ;
+    }) ;
+
+    test( "status 404: responds with message for non-existent topic" , () => {
+      return request( app )
+      .get( "/api/articles?topic=nonexistent" )
+      .expect( 404 )
+      .then( ( { body } ) => {
+        expect( body.msg )
+        .toBe( "topic does not exist" ) ;
+      }) ;
+    }) ;
   }) ;
 
   describe( "DELETE /api/comments/:comment_id" , () => {

@@ -1,4 +1,5 @@
 const db = require( "../db/connection" ) ;
+const { checkExists } = require( "./utils.models" ) ;
 
 exports.selectArticleById = ( article_id ) => {
   return db
@@ -9,22 +10,34 @@ exports.selectArticleById = ( article_id ) => {
         return Promise.reject( { status : 404 , msg : "article does not exist" })
       }
       return article;
-    });
-};
+    }) ;
+} ;
 
-exports.selectArticles = () => {
-  return db
-  .query(
-    `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id)::int AS comment_count
-    FROM articles
-    LEFT JOIN comments ON articles.article_id = comments.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`
-  )
-  .then((result) => {
-    return result.rows;
-  });
-};
+exports.selectArticles = async ( topic ) => {
+
+  let queryString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.comment_id)::int AS comment_count
+  FROM articles
+  LEFT JOIN comments ON articles.article_id = comments.article_id` ;
+
+  const queryParams = [] ;
+
+  if ( topic ) {
+    queryString += ` WHERE articles.topic = $1` ;
+    queryParams.push( topic ) ;
+  }
+
+  queryString += 
+  ` GROUP BY articles.article_id
+  ORDER BY articles.created_at DESC;` ;
+
+  const result = await db.query( queryString , queryParams ) ;
+  
+  if (result.rows.length === 0 && topic ) {
+    await checkExists( "topics" , "slug" , topic ) ;
+  }
+
+  return result.rows;
+} ;
 
 exports.updateArticleByArticleId = ( article_id , inc_votes) => {
   return db

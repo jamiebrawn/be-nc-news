@@ -27,12 +27,12 @@ exports.postCommentByArticleId = ( req , res , next ) => {
   const { username , body } = req.body ;
 
   insertCommentByArticleId( article_id , username , body )
-    .then( ( comment ) => {
-      res
-        .status( 201 )
-        .send( { comment } ) ;
-    })
-    .catch( next ) ;
+  .then( ( comment ) => {
+    res
+    .status( 201 )
+    .send( { comment } ) ;
+  })
+  .catch( next ) ;
 } ;
 
 exports.deleteCommentByCommentId = ( req , res , next ) => {
@@ -41,10 +41,30 @@ exports.deleteCommentByCommentId = ( req , res , next ) => {
   checkExists( "comments" , "comment_id" , comment_id )
   .then( () => {
     return deleteCommentFromDbByCommentId( comment_id )
-      .then( () => {
-        res
-        .sendStatus( 204 ) ;
-      } )
+    .then( () => {
+      res
+      .sendStatus( 204 ) ;
+    } )
     })
   .catch( next ) ;
 } ;
+
+// exports.postCommentByArticleId = ( req , res , next ) => {
+//   const { article_id } = req.params ;
+//   const { username , body } = req.body ;
+
+//   // checkExists("articles", "article_id", article_id) 
+//   // .then(() => {
+//     // return checkExists("users", "username", username) ;
+//     checkExists("users", "username", username) 
+//   // })
+//   .then(() => {
+//     return insertCommentByArticleId( article_id , username , body ) ;
+//   })
+//   .then( ( comment ) => {
+//     res
+//     .status( 201 )
+//     .send( { comment } ) ;
+//   })
+//   .catch( next ) ;
+// } ;
