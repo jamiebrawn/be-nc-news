@@ -10,8 +10,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles, latest first",
-    "queries": [],
+    "description": "serves an array of all articles, latest first. Can be filtered by topic",
+    "queries": ["topic"],
     "exampleResponse": {
       "articles": [
         {
