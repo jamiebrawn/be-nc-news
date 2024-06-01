@@ -47,7 +47,7 @@ exports.selectArticles = async ( topic ) => {
   return result.rows;
 } ;
 
-exports.updateArticleByArticleId = ( article_id , inc_votes) => {
+exports.updateArticleByArticleId = ( article_id , inc_votes ) => {
   return db
   .query(
     `UPDATE articles
