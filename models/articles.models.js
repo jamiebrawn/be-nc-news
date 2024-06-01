@@ -2,6 +2,15 @@ const db = require( "../db/connection" ) ;
 const { checkExists } = require( "./utils.models" ) ;
 
 exports.selectArticleById = ( article_id ) => {
+
+
+  const commentCountQuery = `
+    SELECT COUNT(*)::int AS comment_count
+    FROM comments
+    WHERE article_id = $1;
+  `;
+
+
   return db
     .query( "SELECT * FROM articles WHERE article_id = $1;" , [ article_id ] )
     .then( ( { rows } ) => {
@@ -9,7 +18,18 @@ exports.selectArticleById = ( article_id ) => {
       if ( !article ) {
         return Promise.reject( { status : 404 , msg : "article does not exist" })
       }
-      return article;
+
+      return db
+      .query(
+        `SELECT COUNT(*)::int AS comment_count
+        FROM comments
+        WHERE article_id = $1;` ,
+        [ article_id ] 
+      )
+      .then(( commentCountResult ) => {
+        article.comment_count = commentCountResult.rows[ 0 ].comment_count ;
+        return article ;
+      })
     }) ;
 } ;
 

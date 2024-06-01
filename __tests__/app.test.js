@@ -72,6 +72,17 @@ describe ( "app" , () => {
         .toBe( 100 ) ;
         expect( body.article.article_img_url )
         .toBe( "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700" ) ;
+        expect( body.article.comment_count )
+        .toBe ( 11 ) ;
+      }) ;
+    }) ;
+    test( "status 200: should handle articles with 0 comments" , () => {
+      return request( app )
+      .get( "/api/articles/2" )
+      .expect( 200 )
+      .then( ( { body } ) => {
+        expect( body.article.comment_count )
+        .toBe ( 0 ) ;
       }) ;
     }) ;
     test( "status 404: returned with error message for valid but non-existent id" , () => {
