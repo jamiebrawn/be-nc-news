@@ -22,7 +22,7 @@ describe ( "app" , () => {
 			.expect( 200 )
 			.then( ( { body } )=> {
 
-				expect( body.topics ).toHaveLength( 3 ) ;
+				expect( body.topics ).toHaveLength( 3 ) ; //.toBeGreaterThan(1); <- allows for updates to test data
 
 				body.topics.forEach( ( topic ) => {
 					expect( topic ).toMatchObject( {
@@ -57,7 +57,7 @@ describe ( "app" , () => {
       .expect( 200 )
       .then( ( { body } ) => {
         expect( body.article.article_id )
-        .toBe( 1 ) ;
+        .toBe( 1 ) ; // only explicit test required , rest of test can be expect.any (in case of changes)
         expect( body.article.title )
         .toBe( "Living in the shadow of a great man" ) ;
         expect( body.article.topic )
@@ -111,9 +111,9 @@ describe ( "app" , () => {
       .patch( "/api/articles/1" )
       .send ( { inc_votes : 1 } )
       .expect( 200 )
-      .then( ( { body } ) => {
+      .then( ( { body } ) => { // most can be any
         expect( body.article.article_id )
-        .toBe( 1 ) ;
+        .toBe( 1 ) ; // explicit
         expect( body.article.title )
         .toBe( "Living in the shadow of a great man" ) ;
         expect( body.article.topic )
@@ -125,7 +125,7 @@ describe ( "app" , () => {
         expect( body.article.created_at )
         .toBe( "2020-07-09T20:11:00.000Z" ) ;
         expect( body.article.votes )
-        .toBe( 101 ) ;
+        .toBe( 101 ) ; // explicit  
         expect( body.article.article_img_url )
         .toBe( "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700" ) ;
       }) ;
@@ -216,7 +216,7 @@ describe ( "app" , () => {
       .expect( 200 )
       .then( ( { body } )=> {
         
-        expect( body.comments ).toHaveLength( 11 ) ;
+        expect( body.comments ).toHaveLength( 11 ) ; // .toBeGreaterThan (1) for flexibility
 
         body.comments.forEach( ( article ) => {
           expect( article ).toMatchObject( {
@@ -285,9 +285,9 @@ describe ( "app" , () => {
         expect( body.comment.comment_id )
         .toEqual( expect.any( Number ) ) ;
         expect( body.comment.article_id )
-        .toBe( 1 ) ;
+        .toBe( 1 ) ; // explicit 
         expect( body.comment.author )
-        .toBe( "butter_bridge" ) ;
+        .toBe( "butter_bridge" ) ; // explicit
         expect( body.comment.body )
         .toBe( "new comment" ) ;
         expect( body.comment.votes )
@@ -310,8 +310,8 @@ describe ( "app" , () => {
       .expect( 404 )
       .then( ( { body } ) => {
         expect( body.msg )
-        .toBe( "Not found" ) ;
-        // .toBe( "article does not exist" )
+        // .toBe( "Not found" ) ;
+        .toBe( "article does not exist" )
       }) ;
     }) ;
     
@@ -328,8 +328,8 @@ describe ( "app" , () => {
       .expect( 404 )
       .then( ( { body } ) => {
         expect( body.msg )
-        .toBe( "Not found" ) ;
-        // .toBe( "user does not exist" ) ;
+        // .toBe( "Not found" ) ;
+        .toBe( "user does not exist" ) ;
       }) ;
     }) ;
 
@@ -393,7 +393,7 @@ describe ( "app" , () => {
 			.expect( 200 )
 			.then( ( { body } )=> {
 
-				expect( body.articles ).toHaveLength( 13 ) ;
+				expect( body.articles ).toHaveLength( 13 ) ; //greaterThan
 
 				body.articles.forEach( ( article ) => {
 					expect( article ).toMatchObject( {
@@ -475,7 +475,7 @@ describe ( "app" , () => {
       .expect( 204 )
       .then( () => {
         return request( app )
-        .get( "/api/articles/1/comments" )
+        .get( "/api/articles/1/comments" ) // .delete( "/api/comments/1" ).expect(404)
         .expect( 200 )
         .then(( { body } ) => {
           expect( body.comments.length )
@@ -512,7 +512,7 @@ describe ( "app" , () => {
       .get( "/api/users" )
       .expect( 200 )
       .then( ( { body } ) => {
-        expect( body.users ).toHaveLength( 4 ) ;
+        expect( body.users ).toHaveLength( 4 ) ; //greater
 
         body.users.forEach( ( user ) => {
           expect( user ).toMatchObject( {

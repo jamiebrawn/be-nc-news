@@ -60,12 +60,12 @@ app.use( ( err , req , res , next ) => {
     res
     .status( 400 )
     .send( { msg: "Bad request" } ) ;
-  } else if ( 
-    err.code === "23503" // foreign_key_violation
-  ) {
-    res
-    .status( 404 )
-    .send( { msg: "Not found" } ) ;
+  // } else if ( 
+  //   err.code === "23503" // foreign_key_violation
+  // ) {
+  //   res
+  //   .status( 404 )
+  //   .send( { msg: "Not found" } ) ;
   } else {
     next( err ) ;
   }

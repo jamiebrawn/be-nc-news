@@ -49,22 +49,22 @@ exports.deleteCommentByCommentId = ( req , res , next ) => {
   .catch( next ) ;
 } ;
 
-// exports.postCommentByArticleId = ( req , res , next ) => {
-//   const { article_id } = req.params ;
-//   const { username , body } = req.body ;
+exports.postCommentByArticleId = ( req , res , next ) => {
+  const { article_id } = req.params ;
+  const { username , body } = req.body ;
 
-//   // checkExists("articles", "article_id", article_id) 
-//   // .then(() => {
-//     // return checkExists("users", "username", username) ;
-//     checkExists("users", "username", username) 
-//   // })
-//   .then(() => {
-//     return insertCommentByArticleId( article_id , username , body ) ;
-//   })
-//   .then( ( comment ) => {
-//     res
-//     .status( 201 )
-//     .send( { comment } ) ;
-//   })
-//   .catch( next ) ;
-// } ;
+  checkExists("articles", "article_id", article_id) 
+  .then(() => {
+    return checkExists("users", "username", username) ;
+    // checkExists("users", "username", username) 
+  })
+  .then(() => {
+    return insertCommentByArticleId( article_id , username , body ) ;
+  })
+  .then( ( comment ) => {
+    res
+    .status( 201 )
+    .send( { comment } ) ;
+  })
+  .catch( next ) ;
+} ;

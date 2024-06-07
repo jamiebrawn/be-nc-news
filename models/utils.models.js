@@ -2,6 +2,10 @@ const format = require( "pg-format" ) ;
 const db = require( "../db/connection") ;
 
 exports.checkExists = async ( table , column , value ) => {
+  const ifValueDoesNotExist = !value;
+  if (ifValueDoesNotExist) {
+    return;
+  }
   const queryStr = format( "SELECT * FROM %I WHERE %I = $1;" , table , column ) ;
   const dbOutput = await db.query( queryStr , [ value ] ) ;
   if ( dbOutput.rows.length === 0 ) {
