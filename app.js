@@ -19,9 +19,9 @@ const {
   getEndpoints 
 } = require('./controllers/endpoints.controllers') ;
 
-app.use(express.json());
-
 app.use(cors());
+
+app.use(express.json());
 
 app.get( "/api/topics" , getTopics) ;
 
